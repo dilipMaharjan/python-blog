@@ -9,8 +9,14 @@
 </head>
 
 <body>
-    <p> Hello From Home</p>
+    {% if request.GET.name%}
     <p>{{message}}</p>
+    {% else %}
+    <form method="get" action="{% url 'home' %}">
+        <input type="text" name="name" value="{{request.GET.name }}" />
+        <input type="submit" value="Submit" />
+    </form>
+    {% endif %}
 </body>
 
 </html>
