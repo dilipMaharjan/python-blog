@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{%block content%}
+<p>{{category.seo_title}}</p>
+<p>{{category.seo_description}}</p>
+<hr/>
+{% for post in posts%}
+<p>{{post.title}}</p>
+<p>{{post.body|truncatechars:50}}</p>
+{%endfor%}
+
+{%endblock %}

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{%block content%}
+<p>{{post.title}}</p>
+<p>{{post.body|truncatechars:50}}</p>
+
+{%endblock %}
