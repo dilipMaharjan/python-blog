@@ -1,35 +1,22 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Category
-
-
-# class based list view
-class PostListView(ListView):
-    model = Post
-
-    def get_context_data(self, **kwargs):
-        context = super(PostListView, self).get_context_data(**kwargs)
-        context['object_list'] = Post.objects.filter(status='Published')
-        return context
-
-
-# class based detail view
-class PostDetailView(DetailView):
-    model = Post
-
-    def get_context_data(self, **kwargs):
-        context = super(PostDetailView, self).get_context_data(**kwargs)
-        return context
 
 
 # function based list view
 def post_list(request):
     template = 'blog/post_list.html'
     objects_list = Post.objects.filter(status='Published')
+    paginator = Paginator(objects_list, 2)
+    page = request.GET.get('page')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
     context = {
-        'objects_list': objects_list,
+        'items': items,
     }
     return render(request, template, context)
 
