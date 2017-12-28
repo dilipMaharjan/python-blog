@@ -108,3 +108,4 @@ venv.bak/
 /blog/migrations/
 .idea
 db.sqlite3
+.vscode

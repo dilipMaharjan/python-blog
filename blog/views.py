@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Category
-
+from .forms import PostForm
 
 # function based list view
 def post_list(request):
-    template = 'blog/post_list.html'
-    objects_list = Post.objects.filter(status='Published')
+    template = 'post/post_list.html'
+    objects_list = Post.objects.filter(status='Published').order_by('id')
     paginator = Paginator(objects_list, 2)
     page = request.GET.get('page')
     try:
@@ -23,7 +23,7 @@ def post_list(request):
 
 # function based list view
 def post_detail(request, slug):
-    template = 'blog/post_detail.html'
+    template = 'post/post_detail.html'
     post = get_object_or_404(Post, slug=slug)
     context = {
         'post': post,
@@ -42,3 +42,18 @@ def category_detail(request, slug):
         'posts': posts
     }
     return render(request, template, context)
+
+def new_post(request):
+    template='post/new_post.html'
+
+    post=PostForm(request.POST or None)
+
+    if post.is_valid():
+        post.save()
+    else:
+        post=PostForm()
+
+    context = {
+        'form':post,
+    }
+    return render(request,template,context)
