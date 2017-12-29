@@ -19,7 +19,11 @@
         <td>{% if item.seo_title %}Yes{% else %}No{% endif %}</td>
         <td>{% if item.seo_description %}Yes{% else %}No{% endif %}</td>
         <td>
-            <button class="btn btn-warning">Edit</button>
+            <td>
+                <a href="{% url 'blog:edit_post' pk=item.pk %}">
+                    <button class="btn btn-warning">Edit</button>
+                </a>
+            </td>
         </td>
         <td>
             <button class="btn btn-danger">Delete</button>
@@ -27,5 +31,4 @@
     </tr>
     {% endfor %}
 </table>
-{% include '../utils/pagination.html' %}
-{% endblock %}
+{% include '../utils/pagination.html' %} {% endblock %}

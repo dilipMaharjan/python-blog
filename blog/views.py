@@ -52,7 +52,6 @@ def new_post(request):
             post.save()
             messages.success(request,"Post saved successfully.")
     except Exception as e:
-         post=PostForm()
          messages.warning(request,"Post couldn't be saved successfully.Error :{}".format(e))
     context = {
         'form':post,
@@ -68,4 +67,28 @@ def post_list_admin(request):
     'page_range': pages[1]
     }
 
+    return render(request, template, context)
+
+def edit_post(request, pk):
+    template = 'post/new_post.html'
+    post = get_object_or_404(Post, pk=pk)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your Blog Post Was Successfully Updated")
+
+        except Exception as e:
+            messages.warning(request, 'Your Post Was Not Saved Due To An Error: {}'.format(e))
+
+    else:
+        form = PostForm(instance=post)
+
+    context = {
+        'form': form,
+        'post': post,
+    }
     return render(request, template, context)
