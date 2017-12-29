@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Category
 from .forms import PostForm
+from django.contrib import messages
+
 
 # function based list view
 def post_list(request):
@@ -47,12 +49,13 @@ def new_post(request):
     template='post/new_post.html'
 
     post=PostForm(request.POST or None)
-
-    if post.is_valid():
-        post.save()
-    else:
-        post=PostForm()
-
+    try:
+        if post.is_valid():
+            post.save()
+            messages.success(request,"Post saved successfully.")
+    except Exception as e:
+         post=PostForm()
+         messages.warning(request,"Post couldn't be saved successfully.Error :{}".format(e))
     context = {
         'form':post,
     }
