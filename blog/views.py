@@ -92,3 +92,23 @@ def edit_post(request, pk):
         'post': post,
     }
     return render(request, template, context)
+
+def delete_post(request, pk):
+    template = 'post/new_post.html'
+
+    post = get_object_or_404(Post, pk=pk)
+
+    try:
+        if request.method == 'POST':
+            form = PostForm(request.POST, instance=post)
+            post.delete()
+            messages.success(request, 'You have successfully deleted the post')
+        else:
+            form = PostForm(instance=post)
+    except Exception as e:
+        messages.warning(request, 'The post could not be deleted. Error {}'.format(e))
+
+    context = {
+        'form': form,
+    }
+    return render(request, template, context)
