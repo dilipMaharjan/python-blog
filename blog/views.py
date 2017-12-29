@@ -1,25 +1,23 @@
 from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from .models import Post, Category
 from .forms import PostForm
 from django.contrib import messages
-
+from .utils import pagination
 
 # function based list view
 def post_list(request):
     template = 'post/post_list.html'
-    objects_list = Post.objects.filter(status='Published').order_by('id')
-    paginator = Paginator(objects_list, 2)
-    page = request.GET.get('page')
-    try:
-        items = paginator.page(page)
-    except PageNotAnInteger:
-        items = paginator.page(1)
-    except EmptyPage:
-        items = paginator.page(paginator.num_pages)
+
+    object_list = Post.objects.filter(status='Published').order_by('id')
+    
+    pages = pagination(request, object_list, num=3)
+
     context = {
-        'items': items,
+    'items': pages[0],
+    'page_range': pages[1]
     }
+
     return render(request, template, context)
 
 
@@ -60,3 +58,14 @@ def new_post(request):
         'form':post,
     }
     return render(request,template,context)
+
+def post_list_admin(request):
+    template = 'post/post_list_admin.html'
+    post = Post.objects.all()
+    pages = pagination(request, post, num=3)
+    context = {
+    'items': pages[0],
+    'page_range': pages[1]
+    }
+
+    return render(request, template, context)
